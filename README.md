@@ -1,16 +1,452 @@
-## Hi there 👋
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的個人博客</title>
+    <!-- 引入 Google 字體與圖標 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --google-blue: #1a73e8;
+            --google-blue-hover: #1557b0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --border-color: #dadce0;
+        }
 
-<!--
-**enclave-x-mars/enclave-x-mars** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-Here are some ideas to get you started:
+        body {
+            font-family: 'Roboto', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+        /* 頂部導覽列 (Google 風格) */
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .brand span.highlight {
+            color: var(--google-blue);
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .nav-links a:hover {
+            background-color: #f1f3f4;
+            color: var(--text-primary);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 1080px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 32px;
+        }
+
+        @media (max-width: 850px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 分類標籤列 */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            background-color: #f1f3f4;
+        }
+
+        .filter-btn.active {
+            background-color: #e8f0fe;
+            color: var(--google-blue);
+            border-color: #d2e3fc;
+            font-weight: 500;
+        }
+
+        /* 文章卡片列表 */
+        .posts-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .post-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .post-card:hover {
+            box-shadow: 0 4px 12px rgba(60, 64, 67, 0.12);
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .post-tag {
+            color: var(--google-blue);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .post-title {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.35;
+        }
+
+        .post-card:hover .post-title {
+            color: var(--google-blue);
+        }
+
+        .post-excerpt {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+
+        .read-more {
+            color: var(--google-blue);
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* 右側邊欄 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .widget {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .widget-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .profile-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background-color: var(--google-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 500;
+            margin-bottom: 14px;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .profile-bio {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        /* 閱讀文章彈出視窗 (Modal) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(32, 33, 36, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            max-width: 720px;
+            width: 100%;
+            max-height: 85vh;
+            border-radius: 8px;
+            padding: 32px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            background: #f1f3f4;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .close-btn:hover {
+            background: #e8eaed;
+            color: var(--text-primary);
+        }
+
+        .modal-body p {
+            margin-bottom: 16px;
+            font-size: 16px;
+            color: #3c4043;
+        }
+
+        footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            background: var(--card-bg);
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 頂部導覽 -->
+    <header>
+        <a href="#" class="brand" onclick="filterPosts('all')">
+            <span class="highlight">My</span> Blog
+        </a>
+        <nav class="nav-links">
+            <a href="#" onclick="filterPosts('all')">全部文章</a>
+            <a href="#about">關於我</a>
+        </nav>
+    </header>
+
+    <!-- 主要內容區 -->
+    <div class="container">
+        <main>
+            <!-- 分類篩選按鈕 -->
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterPosts('all', this)">全部</button>
+                <button class="filter-btn" onclick="filterPosts('生活隨筆', this)">生活隨筆</button>
+                <button class="filter-btn" onclick="filterPosts('閱讀與創作', this)">閱讀與創作</button>
+                <button class="filter-btn" onclick="filterPosts('技術筆記', this)">技術筆記</button>
+            </div>
+
+            <!-- 文章列表容器 (由下方 JavaScript 自動生成) -->
+            <div class="posts-grid" id="posts-container"></div>
+        </main>
+
+        <!-- 右側個人簡介邊欄 -->
+        <aside class="sidebar" id="about">
+            <div class="widget">
+                <div class="profile-avatar">博</div>
+                <div class="profile-name">我的個人空間</div>
+                <p class="profile-bio">
+                    歡迎來到我的個人博客。這裡記錄我的日常觀察、閱讀心得、寫作思考與生活點滴。
+                </p>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">博客公告</div>
+                <p style="font-size: 14px; color: var(--text-secondary);">
+                    本站託管於 GitHub Pages，採用極簡卡片設計，專注於文字與閱讀體驗。
+                </p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- 文章全文閱讀視窗 -->
+    <div class="modal-overlay" id="article-modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <div class="post-meta" id="modal-meta"></div>
+            <h1 class="post-title" id="modal-title" style="font-size: 26px; margin-bottom: 20px;"></h1>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 我的個人博客 · Powered by GitHub Pages
+    </footer>
+
+    <!-- ==========================================
+         文章資料庫：以後新增或修改文章，只需改這裡！
+         ========================================== -->
+    <script>
+        const blogPosts = [
+            {
+                id: 1,
+                title: "第一篇博客：為什麼我選擇在 GitHub 建立個人網站？",
+                category: "技術筆記",
+                date: "2026年11月26日",
+                excerpt: "不需要租用昂貴的伺服器，也沒有廣告干擾。透過靜態網頁與 GitHub Pages，我們可以完全掌握自己的文字與資料...",
+                content: `
+                    <p>在這個演算法主導的時代，擁有一個完全屬於自己的網路空間變得格外珍貴。</p>
+                    <p>使用 GitHub Pages 建立個人博客有幾個顯著的優點：首先是<strong>完全免費且穩定</strong>，背靠全球最大的程式碼託管平台；其次是<strong>極簡與純粹</strong>，沒有多餘的廣告彈窗，讀者可以專注在內容本身。</p>
+                    <p>未來我會在這裡持續分享生活感悟、讀書筆記以及各類實用的經驗總結。</p>
+                `
+            },
+            {
+                id: 2,
+                title: "關於寫作與閱讀：慢下來的思考方式",
+                category: "閱讀與創作",
+                date: "2026年11月20日",
+                excerpt: "碎片化的資訊容易讓人焦慮，而長文寫作則是整理思緒最好的工具。當我們把想法落實成文字時，邏輯才會真正清晰...",
+                content: `
+                    <p>很多人以為寫作是為了向別人展示什麼，但對我而言，寫作更像是一場與自己的深度對話。</p>
+                    <p>當腦海中有許多零散的念頭時，試著把它們寫成一篇結構完整的文章，你會發現原本模糊的觀點逐漸變得清晰，甚至能從中發現自己過去忽略的盲點。</p>
+                    <p>希望這個小角落能成為沉澱思緒的基地。</p>
+                `
+            },
+            {
+                id: 3,
+                title: "秋末冬初的日常隨筆：自然與生活的節奏",
+                category: "生活隨筆",
+                date: "2026年11月12日",
+                excerpt: "隨著氣溫逐漸轉涼，生活的步調也跟著慢了下來。觀察季節更替中的細微變化，總能讓人感受到平靜的力量...",
+                content: `
+                    <p>十一月的天氣帶著微涼的空氣，正是適合泡一杯熱茶、靜靜看書的時節。</p>
+                    <p>無論外在環境如何變化，保持規律的作息、照顧好日常飲食與居家環境，就是對抗不確定性最好的方式。</p>
+                `
+            }
+        ];
+
+        // 渲染文章列表
+        function renderPosts(posts) {
+            const container = document.getElementById('posts-container');
+            container.innerHTML = posts.map(post => `
+                <article class="post-card" onclick="openArticle(${post.id})">
+                    <div class="post-meta">
+                        <span class="post-tag">${post.category}</span>
+                        <span>•</span>
+                        <span>${post.date}</span>
+                    </div>
+                    <h2 class="post-title">${post.title}</h2>
+                    <p class="post-excerpt">${post.excerpt}</p>
+                    <span class="read-more">閱讀全文 &rarr;</span>
+                </article>
+            `).join('');
+        }
+
+        // 分類篩選功能
+        function filterPosts(category, btnElement) {
+            if (btnElement) {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+            if (category === 'all') {
+                renderPosts(blogPosts);
+            } else {
+                const filtered = blogPosts.filter(post => post.category === category);
+                renderPosts(filtered);
+            }
+        }
+
+        // 開啟文章閱讀視窗
+        function openArticle(id) {
+            const post = blogPosts.find(p => p.id === id);
+            if (!post) return;
+
+            document.getElementById('modal-meta').innerHTML = `<span class="post-tag">${post.category}</span> <span>•</span> <span>${post.date}</span>`;
+            document.getElementById('modal-title').innerText = post.title;
+            document.getElementById('modal-body').innerHTML = post.content;
+            document.getElementById('article-modal').style.display = 'flex';
+        }
+
+        // 關閉視窗
+        function closeModal() {
+            document.getElementById('article-modal').style.display = 'none';
+        }
+
+        // 頁面載入時顯示全部文章
+        renderPosts(blogPosts);
+    </script>
+</body>
+</html>
